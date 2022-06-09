@@ -167,15 +167,6 @@ namespace Grpc.Core.Internal
         /// </summary>
         private static NativeMethods LoadNativeMethods()
         {
-            if (PlatformApis.IsUnity)
-            {
-                return LoadNativeMethodsUnity();
-            }
-            if (PlatformApis.IsXamarin)
-            {
-                return LoadNativeMethodsXamarin();
-            }
-
             // Override location of grpc_csharp_ext native library with an environment variable
             // Use at your own risk! By doing this you take all the responsibility that the dynamic library
             // is of the correct version (needs to match the Grpc.Core assembly exactly) and of the correct platform/architecture.
@@ -183,6 +174,15 @@ namespace Grpc.Core.Internal
             if (!string.IsNullOrEmpty(nativeExtPathFromEnv))
             {
                 return new NativeMethods(new UnmanagedLibrary(new string[] { nativeExtPathFromEnv }));
+            }
+
+            if (PlatformApis.IsUnity)
+            {
+                return LoadNativeMethodsUnity();
+            }
+            if (PlatformApis.IsXamarin)
+            {
+                return LoadNativeMethodsXamarin();
             }
 
             if (IsNet5SingleFileApp())
